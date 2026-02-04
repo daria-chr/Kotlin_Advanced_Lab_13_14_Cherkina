@@ -1,3 +1,5 @@
+import java.util.stream.Stream
+
 data class Question<T>(
     val questionText: String,
     val answer: T,
@@ -10,9 +12,14 @@ enum class Difficulty {
     HARD
 }
 
+interface ProgressPrintable{
+    val progressText: String
+    fun printProgressBar()
+}
 
-
-class Quiz{
+class Quiz : ProgressPrintable{
+    override val progressText: String
+        get() = "${answered} of ${total} answered"
     val question1=Question<String>(
         questionText = "Речка спятила с ума-по домам пошла сама ___",
         answer = "водопровод",
@@ -32,16 +39,13 @@ class Quiz{
         val total:Int=10
         var answered: Int=3
     }
-}
 
-val Quiz.StudentProgress.progressText: String
-    get() = "${answered} of ${total} answered"
-
-fun Quiz.StudentProgress.printProgressBar(){
-    repeat(Quiz.answered){ print("▓")}
-    repeat(Quiz.total - Quiz.answered){ print("▒")}
-    println()
-    println(Quiz.progressText)
+    override fun printProgressBar() {
+        repeat(Quiz.answered){ print("▓")}
+        repeat(Quiz.total - Quiz.answered){ print("▒")}
+        println()
+        println(progressText)
+    }
 }
 
 
@@ -52,5 +56,6 @@ fun main() {
 //    println(question1.toString())
 //    println("${Quiz.answered} of ${Quiz.total} answered")
 //    println(Quiz.progressText)
-    Quiz.printProgressBar()
+//    Quiz.printProgressBar()
+    Quiz().printProgressBar()
 }
